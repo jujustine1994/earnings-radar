@@ -1,0 +1,6 @@
+# Sensitive / private tracking data — do not publish
+watchlist.json
+state.json
+reports/
+error.log
+.env
