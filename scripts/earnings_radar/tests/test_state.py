@@ -1,4 +1,3 @@
-import json
 from earnings_radar import state
 
 
