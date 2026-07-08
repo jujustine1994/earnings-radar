@@ -1,6 +1,8 @@
 from datetime import date
 from unittest.mock import Mock
 
+import requests
+
 from earnings_radar import nasdaq_calendar
 
 
@@ -53,6 +55,34 @@ def test_skips_day_on_malformed_response():
     bad_resp = Mock()
     bad_resp.status_code = 200
     bad_resp.json.return_value = {"data": None}
+    session.get.side_effect = [bad_resp, _fake_response(["AAPL"])]
+
+    result = nasdaq_calendar.fetch_next_earnings_date(
+        "AAPL", date(2026, 7, 28), session=session, max_days_ahead=5
+    )
+
+    assert result == date(2026, 7, 29)
+
+
+def test_skips_day_on_request_exception():
+    session = Mock()
+    session.get.side_effect = [
+        requests.exceptions.ConnectionError("boom"),
+        _fake_response(["AAPL"]),
+    ]
+
+    result = nasdaq_calendar.fetch_next_earnings_date(
+        "AAPL", date(2026, 7, 28), session=session, max_days_ahead=5
+    )
+
+    assert result == date(2026, 7, 29)
+
+
+def test_skips_day_on_json_decode_error():
+    session = Mock()
+    bad_resp = Mock()
+    bad_resp.status_code = 200
+    bad_resp.json.side_effect = ValueError("no json")
     session.get.side_effect = [bad_resp, _fake_response(["AAPL"])]
 
     result = nasdaq_calendar.fetch_next_earnings_date(

@@ -18,10 +18,13 @@ def fetch_next_earnings_date(
     http = session or requests
     for offset in range(max_days_ahead):
         day = today + timedelta(days=offset)
-        response = http.get(_URL, params={"date": day.isoformat()}, headers=_HEADERS)
-        if response.status_code != 200:
+        try:
+            response = http.get(_URL, params={"date": day.isoformat()}, headers=_HEADERS)
+            if response.status_code != 200:
+                continue
+            symbols = _extract_symbols(response.json())
+        except (requests.exceptions.RequestException, ValueError):
             continue
-        symbols = _extract_symbols(response.json())
         if ticker in symbols:
             return day
     return None
