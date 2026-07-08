@@ -4,3 +4,7 @@ state.json
 reports/
 error.log
 .env
+
+# Python
+__pycache__/
+.pytest_cache/
