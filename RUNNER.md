@@ -24,8 +24,10 @@ For each item in the JSON array returned:
    - If `preview_summary` is null: state plainly that no preview was on file for this filing (either not tracked yet, or already compared) — do not fabricate a prior expectation.
 3. Send the draft by email (Gmail MCP tool) to the user.
 4. Save the draft to `reports/{ticker}/{filing_date}-filing-vs-preview.md`.
-5. Run: `python scripts/earnings_radar/update_state.py mark-filing-compared --state state.json --ticker {ticker} --earnings-date {matched_earnings_date} --accession {accession_number}`
-   (skip this step if `matched_earnings_date` is null — there's no cycle to mark, but still record the accession by running the same command with today's date as `--earnings-date` so future runs don't re-trigger on this filing... actually: if `matched_earnings_date` is null, run `mark-filing-compared` with `--earnings-date` set to `{filing_date}` instead, so `last_filing_accession` still gets updated.)
+5. Run `update_state.py mark-filing-compared` to persist the outcome:
+   - If `matched_earnings_date` is not null, use it as `--earnings-date`.
+   - If `matched_earnings_date` is null (no pending preview to mark), use `{filing_date}` as `--earnings-date` instead — this still records the new accession so future runs don't re-trigger on this same filing.
+   - `python scripts/earnings_radar/update_state.py mark-filing-compared --state state.json --ticker {ticker} --earnings-date <as above> --accession {accession_number}`
 
 ## 3. Error handling
 
