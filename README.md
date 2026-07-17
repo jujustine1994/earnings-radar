@@ -1,3 +1,12 @@
+規則檔: windows-tool.md
+
+> **AI 注意（本專案為 windows-tool 的特例）：** 本專案是 Python 本機自動化腳本，
+> 但**不是雙擊啟動**的工具——由 Claude Code `/schedule`（cron agent）驅動 CLI，
+> 沒有 `<工具名>啟動器.bat` 也沒有 `launcher.ps1`，沒有 tkinter UI。
+> `windows-tool.md` 的**啟動器與 bat 相關章節一律不適用**，不要為了合規而補建；
+> 執行紀錄、文件規範、資安（例外處理不外洩金鑰）等其餘章節照常適用。
+> 執行方式見 `RUNNER.md`。
+
 # earnings-radar
 
 Automated pre/post-earnings tracking and preview-vs-actual comparison for US equities, powered by Claude.
